@@ -14,11 +14,6 @@ class Game:
     def reset(self):
         self.board = [[' ',' ',' '],[' ',' ',' '],[' ',' ',' ']]
         self.player = 'X'
-        play_again = input('Would you like to play again? (Yes/No) ')
-        if play_again == 'Yes':
-            self.play()
-        elif play_again != 'No':
-            print('Invalid input. Sorry, you do not get to play again.')
 
 
     def print_board(self):
@@ -55,49 +50,56 @@ class Game:
 
     def play(self):
 
-        game_over = False
+        playing = True
 
-        while not game_over:
-            self.print_board()
+        while playing:
             
-            # Loop ensures valid input
-            valid_move = False
-            while not valid_move:
-                try:
-                    row = int(input(f'{self.player} player, enter your row (1-3): ')) - 1
-                    col = int(input('Now enter your column (1-3): ')) - 1
+            self.reset()
+            game_over = False
 
-                    valid_move = True
+            while not game_over:
+                self.print_board()
+            
+                # Loop ensures valid input
+                valid_move = False
+                while not valid_move:
+                    try:
+                        row = int(input(f'{self.player} player, enter your row (1-3): ')) - 1
+                        col = int(input('Now enter your column (1-3): ')) - 1
 
-                    if row not in range(3) or col not in range(3):
-                        print('Row or column out of range. Try again')
-                        valid_move = False
+                        valid_move = True
+
+                        if row not in range(3) or col not in range(3):
+                            print('Row or column out of range. Try again')
+                            valid_move = False
                     
-                    elif self.board[row][col] != ' ':
-                        print('Spot taken. Select an open spot.')
-                        valid_move = False
+                        elif self.board[row][col] != ' ':
+                            print('Spot taken. Select an open spot.')
+                            valid_move = False
 
                 
-                except ValueError:
-                    print('Invalid input. Please enter an integer.')
+                    except ValueError:
+                        print('Invalid input. Please enter an integer.')
             
-            self.move(row,col)
+                self.move(row,col)
 
-            if self.check_win():
-                self.print_board()
-                print(f'{self.player} player wins!')
-                game_over = True
-            elif self.check_draw():
-                self.print_board()
-                print('Draw.')
-                game_over = True
-            else:
-                if self.player == 'X':
-                    self.player = 'O'
+                if self.check_win():
+                    self.print_board()
+                    print(f'{self.player} player wins!')
+                    game_over = True
+                elif self.check_draw():
+                    self.print_board()
+                    print('Draw.')
+                    game_over = True
                 else:
-                    self.player = 'X'
+                    if self.player == 'X':
+                        self.player = 'O'
+                    else:
+                        self.player = 'X'
 
-        self.reset()
+            play_again = input('Would you like to play again? (Say "Yes" if so) ')
+            if play_again != 'Yes':
+                playing = False
 
 
 def main():
