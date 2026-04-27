@@ -3,7 +3,6 @@ Mathias Bernat
 CMPSC 132 Final: 'Tic-Tac-Toe'
 """
 
-# Testing git status due to merge conflict; please disregard
 
 class Game:
 
@@ -15,6 +14,11 @@ class Game:
     def reset(self):
         self.board = [[' ',' ',' '],[' ',' ',' '],[' ',' ',' ']]
         self.player = 'X'
+        play_again = input('Would you like to play again? (Yes/No) ')
+        if play_again == 'Yes':
+            self.play()
+        elif play_again != 'No':
+            print('Invalid input. Sorry, you do not get to play again.')
 
 
     def print_board(self):
@@ -23,8 +27,7 @@ class Game:
 
 
     def move(self,row,col):
-
-        pass
+        self.board[row][col] = self.player
 
 
     def check_win(self):
@@ -43,7 +46,7 @@ class Game:
         return False
     
 
-    def check_draw(self):
+    def check_draw(self): # Only happens after board is checked for wins
         for row in self.board:
             if ' ' in row:
                 return False
@@ -52,9 +55,49 @@ class Game:
 
     def play(self):
 
-        self.reset()
+        game_over = False
 
-        pass
+        while not game_over:
+            self.print_board()
+            
+            # Loop ensures valid input
+            valid_move = False
+            while not valid_move:
+                try:
+                    row = int(input(f'{self.player} player, enter your row (1-3): ')) - 1
+                    col = int(input('Now enter your column (1-3): ')) - 1
+
+                    valid_move = True
+
+                    if row not in range(3) or col not in range(3):
+                        print('Row or column out of range. Try again')
+                        valid_move = False
+                    
+                    elif self.board[row][col] != ' ':
+                        print('Spot taken. Select an open spot.')
+                        valid_move = False
+
+                
+                except ValueError:
+                    print('Invalid input. Please enter an integer.')
+            
+            self.move(row,col)
+
+            if self.check_win():
+                self.print_board()
+                print(f'{self.player} player wins!')
+                game_over = True
+            elif self.check_draw():
+                self.print_board()
+                print('Draw.')
+                game_over = True
+            else:
+                if self.player == 'X':
+                    self.player = 'O'
+                else:
+                    self.player = 'X'
+
+        self.reset()
 
 
 def main():
